@@ -1,0 +1,11 @@
+{
+  "extensionName": {
+    "message": "Winna Rain Claimer",
+    "description": "Name of the extension"
+  },
+  "extensionDescription": {
+    "message": "Automatically join Live Rain giveaways on winna.com",
+    "description": "Description of the extension"
+  }
+}
+

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Winna Rain Claimer</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Animated background -->
+    <div class="bg-effects">
+      <div class="rain-drop" style="--delay: 0s; --left: 10%"></div>
+      <div class="rain-drop" style="--delay: 0.5s; --left: 25%"></div>
+      <div class="rain-drop" style="--delay: 1s; --left: 40%"></div>
+      <div class="rain-drop" style="--delay: 0.3s; --left: 55%"></div>
+      <div class="rain-drop" style="--delay: 0.8s; --left: 70%"></div>
+      <div class="rain-drop" style="--delay: 0.2s; --left: 85%"></div>
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+      <div class="logo">
+        <img src="icons/icon48.png" alt="Winna" class="logo-icon">
+        <span class="logo-text">Rain Claimer</span>
+      </div>
+      <div class="header-right">
+        <button class="lang-toggle" id="langToggle" title="Switch language">
+          <span class="lang-flag" id="langFlag">🇺🇸</span>
+        </button>
+        <div class="status-badge" id="statusBadge">
+          <span class="status-dot"></span>
+          <span class="status-text" data-i18n="status_off">Off</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main toggle -->
+    <div class="toggle-section">
+      <label class="toggle-switch">
+        <input type="checkbox" id="enableToggle">
+        <span class="toggle-slider">
+          <span class="toggle-icon off">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18.36 6.64a9 9 0 1 1-12.73 0"/>
+              <line x1="12" y1="2" x2="12" y2="12"/>
+            </svg>
+          </span>
+          <span class="toggle-icon on">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
+              <path d="M1.42 9a16 16 0 0 1 21.16 0"/>
+              <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+              <line x1="12" y1="20" x2="12.01" y2="20"/>
+            </svg>
+          </span>
+        </span>
+      </label>
+      <p class="toggle-label" id="toggleLabel" data-i18n="toggle_activate">Click to activate</p>
+    </div>
+
+    <!-- Delay setting -->
+    <div class="settings-card">
+      <div class="setting-header">
+        <svg class="setting-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12,6 12,12 16,14"/>
+        </svg>
+        <span data-i18n="delay_title">Join Delay</span>
+        <div class="info-tooltip">
+          <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 16v-4"/>
+            <path d="M12 8h.01"/>
+          </svg>
+          <div class="tooltip-content" data-i18n="delay_tooltip">Set the time the script will wait after rain starts before joining.</div>
+        </div>
+      </div>
+      <div class="delay-input-wrapper">
+        <button class="delay-btn minus" id="delayMinus">−</button>
+        <div class="delay-display">
+          <input type="number" id="delayInput" min="0" max="60" value="3">
+          <span class="delay-unit" data-i18n="seconds">sec</span>
+        </div>
+        <button class="delay-btn plus" id="delayPlus">+</button>
+      </div>
+      <div class="delay-slider-wrapper">
+        <input type="range" id="delaySlider" min="0" max="60" value="3" class="delay-slider">
+        <div class="slider-labels">
+          <span>0</span>
+          <span>30</span>
+          <span>60</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-section">
+      <div class="stat-card">
+        <div class="stat-value" id="totalJoins">0</div>
+        <div class="stat-label" data-i18n="stat_joins">Joins</div>
+      </div>
+      <div class="stat-card highlight">
+        <div class="stat-value" id="lastRain">—</div>
+        <div class="stat-label" data-i18n="stat_last_rain">Last Rain</div>
+      </div>
+    </div>
+
+    <!-- CTA Button -->
+    <a href="https://winna.top" target="_blank" class="cta-button" id="ctaButton">
+      <span class="cta-shine"></span>
+      <span class="cta-glow"></span>
+      <img src="icons/icon48.png" alt="" class="cta-icon">
+      <span class="cta-text" data-i18n="cta_play">Play on Winna</span>
+      <svg class="cta-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </a>
+
+    <!-- Footer -->
+    <div class="footer">
+      <span class="version">v1.0.0</span>
+      <span class="divider">•</span>
+      <span class="site">winna.com</span>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
