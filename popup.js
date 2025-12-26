@@ -148,7 +148,7 @@ async function saveSettings(updates) {
 async function notifyContentScript(settings) {
   try {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-    if (tab && tab.url && (tab.url.includes('winna.com') || tab.url.includes('winna.top'))) {
+    if (tab && tab.url && tab.url.includes('winna.com')) {
       chrome.tabs.sendMessage(tab.id, {
         type: 'SETTINGS_UPDATED',
         settings: settings
