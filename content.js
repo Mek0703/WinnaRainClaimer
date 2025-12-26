@@ -158,83 +158,92 @@
 
   // Get current rain amount from the page
   function getRainAmount() {
-    // Strategy 1: Look for amount near "Live Rain" text
-    const allElements = document.querySelectorAll('*');
+    // Strategy 1: Find the exact element with rain amount
+    // The amount is in a div with classes "flex w-full min-w-[50px] grow items-center justify-center"
+    // inside the Live Rain container
     
-    for (const el of allElements) {
-      const text = el.textContent || '';
-      // Look for dollar amounts like $123.45 or $1,234.56
-      const match = text.match(/\$[\d,]+\.?\d*/);
-      if (match) {
-        // Check if this element is near the Live Rain section
-        let currentEl = el;
-        let depth = 0;
-        while (currentEl && depth < 10) {
-          if (currentEl.textContent && currentEl.textContent.includes('Live Rain')) {
-            // Extract the amount
-            const amountStr = match[0].replace('$', '').replace(',', '');
+    // First, find the Live Rain container (has "Live Rain" text)
+    const liveRainContainers = document.querySelectorAll('[class*="glowBorderContainer"], [class*="GlowBorder"]');
+    
+    for (const container of liveRainContainers) {
+      if (container.textContent && container.textContent.includes('Live Rain')) {
+        // Found Live Rain container, now find the amount
+        // Look for div with min-w-[50px] that contains $ amount
+        const amountDivs = container.querySelectorAll('div.flex.grow');
+        
+        for (const div of amountDivs) {
+          const text = div.textContent.trim();
+          // Check if it's a dollar amount like $149.89
+          if (/^\$[\d,]+\.?\d*$/.test(text)) {
+            const amountStr = text.replace('$', '').replace(/,/g, '');
             const amount = parseFloat(amountStr);
-            if (!isNaN(amount) && amount > 0 && amount < 100000) {
+            if (!isNaN(amount) && amount > 0) {
+              log(`Found rain amount: $${amount}`);
               return amount;
             }
           }
-          currentEl = currentEl.parentElement;
+        }
+        
+        // Fallback: search all divs in container for $ pattern
+        const allDivs = container.querySelectorAll('div');
+        for (const div of allDivs) {
+          // Only check leaf nodes (no child divs) or specific structure
+          if (div.children.length === 0 || div.classList.contains('grow')) {
+            const text = div.textContent.trim();
+            // Match exact dollar amount pattern like $149.89 or $1,234.56
+            if (/^\$[\d,]+\.?\d*$/.test(text)) {
+              const amountStr = text.replace('$', '').replace(/,/g, '');
+              const amount = parseFloat(amountStr);
+              // Filter out very large amounts that might be from leaderboard ($34k etc)
+              if (!isNaN(amount) && amount > 0 && amount < 50000 && !text.includes('k')) {
+                log(`Found rain amount (fallback): $${amount}`);
+                return amount;
+              }
+            }
+          }
+        }
+      }
+    }
+    
+    // Strategy 2: Find by looking near Join/Joined button
+    const joinButtons = document.querySelectorAll('button');
+    for (const button of joinButtons) {
+      const buttonText = button.textContent.trim().toLowerCase();
+      if (buttonText === 'join' || buttonText.includes('joined')) {
+        // Go up to find parent container and look for amount
+        let parent = button.parentElement;
+        let depth = 0;
+        while (parent && depth < 5) {
+          const divs = parent.querySelectorAll('div');
+          for (const div of divs) {
+            const text = div.textContent.trim();
+            if (/^\$\d+\.?\d*$/.test(text)) {
+              const amountStr = text.replace('$', '');
+              const amount = parseFloat(amountStr);
+              if (!isNaN(amount) && amount > 0 && amount < 50000) {
+                log(`Found rain amount (near button): $${amount}`);
+                return amount;
+              }
+            }
+          }
+          parent = parent.parentElement;
           depth++;
         }
       }
     }
     
-    // Strategy 2: Look for specific selectors that might contain the amount
-    const amountSelectors = [
-      '[class*="rain"] [class*="amount"]',
-      '[class*="Rain"] [class*="amount"]',
-      '[class*="rain"] [class*="value"]',
-      '[class*="Rain"] [class*="value"]',
-      '[class*="live-rain"] span',
-      '[class*="liveRain"] span'
-    ];
-    
-    for (const selector of amountSelectors) {
-      try {
-        const elements = document.querySelectorAll(selector);
-        for (const element of elements) {
-          const text = element.textContent || '';
-          const match = text.match(/\$[\d,]+\.?\d*/);
-          if (match) {
-            const amountStr = match[0].replace('$', '').replace(',', '');
-            const amount = parseFloat(amountStr);
-            if (!isNaN(amount) && amount > 0 && amount < 100000) {
-              return amount;
-            }
-          }
-        }
-      } catch (e) {
-        // Invalid selector, skip
+    // Strategy 3: Simple regex search in Live Rain area
+    const pageText = document.body.innerHTML;
+    const liveRainMatch = pageText.match(/Live Rain[\s\S]*?\$(\d+\.?\d*)/);
+    if (liveRainMatch) {
+      const amount = parseFloat(liveRainMatch[1]);
+      if (!isNaN(amount) && amount > 0 && amount < 50000) {
+        log(`Found rain amount (regex): $${amount}`);
+        return amount;
       }
     }
     
-    // Strategy 3: Find any element with $ near the Join button
-    const joinButton = findJoinButton();
-    if (joinButton) {
-      let parent = joinButton.parentElement;
-      let depth = 0;
-      while (parent && depth < 8) {
-        const text = parent.textContent || '';
-        const matches = text.match(/\$[\d,]+\.?\d*/g);
-        if (matches) {
-          for (const m of matches) {
-            const amountStr = m.replace('$', '').replace(',', '');
-            const amount = parseFloat(amountStr);
-            if (!isNaN(amount) && amount > 0 && amount < 100000) {
-              return amount;
-            }
-          }
-        }
-        parent = parent.parentElement;
-        depth++;
-      }
-    }
-    
+    log('Could not find rain amount');
     return 0; // Return 0 if no amount found
   }
   
@@ -254,8 +263,8 @@
     }
     
     if (amount <= 0) {
-      log('Could not determine rain amount, joining anyway');
-      return true; // Can't determine amount, join anyway
+      log(`Could not determine rain amount, skipping (minimum is $${minAmount})`);
+      return false; // Can't determine amount, DON'T join if minimum is set
     }
     
     const sufficient = amount >= minAmount;
