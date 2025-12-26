@@ -59,6 +59,41 @@
       <p class="toggle-label" id="toggleLabel" data-i18n="toggle_activate">Click to activate</p>
     </div>
 
+    <!-- Minimum Amount setting -->
+    <div class="settings-card">
+      <div class="setting-header">
+        <svg class="setting-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="1" x2="12" y2="23"/>
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+        </svg>
+        <span data-i18n="min_amount_title">Minimum Amount</span>
+        <div class="info-tooltip">
+          <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 16v-4"/>
+            <path d="M12 8h.01"/>
+          </svg>
+          <div class="tooltip-content" data-i18n="min_amount_tooltip">The script will only join rains with amount equal or higher than this value.</div>
+        </div>
+      </div>
+      <div class="delay-input-wrapper">
+        <button class="delay-btn minus" id="minAmountMinus">−</button>
+        <div class="delay-display amount-display">
+          <span class="amount-prefix">$</span>
+          <input type="number" id="minAmountInput" min="0" max="10000" value="100">
+        </div>
+        <button class="delay-btn plus" id="minAmountPlus">+</button>
+      </div>
+      <div class="delay-slider-wrapper">
+        <input type="range" id="minAmountSlider" min="0" max="500" value="100" class="delay-slider">
+        <div class="slider-labels">
+          <span>$0</span>
+          <span>$250</span>
+          <span>$500</span>
+        </div>
+      </div>
+    </div>
+
     <!-- Delay setting -->
     <div class="settings-card">
       <div class="setting-header">
@@ -121,7 +156,7 @@
     <div class="footer">
       <span class="version">v1.0.0</span>
       <span class="divider">•</span>
-      <span class="site">winna.com</span>
+      <span class="site">winna.top</span>
     </div>
   </div>
 

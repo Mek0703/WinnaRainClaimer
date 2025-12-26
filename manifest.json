@@ -14,7 +14,8 @@
     "activeTab"
   ],
   "host_permissions": [
-    "*://*.winna.com/*"
+    "*://*.winna.com/*",
+    "*://*.winna.top/*"
   ],
   "action": {
     "default_popup": "popup.html",
@@ -26,7 +27,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["*://*.winna.com/*"],
+      "matches": ["*://*.winna.com/*", "*://*.winna.top/*"],
       "js": ["content.js"],
       "run_at": "document_end"
     }

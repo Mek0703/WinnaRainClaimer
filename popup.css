@@ -439,6 +439,22 @@ body {
   font-size: 14px;
 }
 
+/* Amount display with dollar sign */
+.amount-display {
+  min-width: 100px;
+}
+
+.amount-display input {
+  width: 60px;
+}
+
+.amount-prefix {
+  color: var(--accent-primary);
+  font-size: 20px;
+  font-weight: 700;
+  margin-right: 2px;
+}
+
 /* ===== Delay Slider ===== */
 .delay-slider-wrapper {
   padding: 0 4px;
